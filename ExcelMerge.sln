@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelMerge", "ExcelMerge.csproj", "{8920B86F-38B1-4B68-907A-8FECBF2BDA71}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMTest", "EMTest\EMTest.csproj", "{6092A585-1218-4213-A9F1-7F891902A706}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{8920B86F-38B1-4B68-907A-8FECBF2BDA71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8920B86F-38B1-4B68-907A-8FECBF2BDA71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8920B86F-38B1-4B68-907A-8FECBF2BDA71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6092A585-1218-4213-A9F1-7F891902A706}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6092A585-1218-4213-A9F1-7F891902A706}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6092A585-1218-4213-A9F1-7F891902A706}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6092A585-1218-4213-A9F1-7F891902A706}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
