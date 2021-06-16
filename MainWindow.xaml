@@ -1,0 +1,22 @@
+﻿<Window x:Class="ExcelMerge.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ExcelMerge"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid Name="LGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="36"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Button Name="SelectFilesBtn" Click="_selectFiles" Grid.Column="0" Grid.Row="0">Select Files</Button>
+        <Button Name="MergeFilesBtn" Click="_mergeFiles" Grid.Column="1" Grid.Row="0">Merge Files</Button>
+        <TextBlock Name="TBlock" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" TextWrapping="Wrap"></TextBlock>
+    </Grid>
+</Window>
