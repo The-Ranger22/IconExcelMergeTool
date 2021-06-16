@@ -40,17 +40,29 @@ namespace EMTest {
             excelApp.Visible = false;
             Excel._Workbook wb = excelApp.Workbooks.Open("C:\\Users\\Basestar\\Documents\\TEST.xlsx");
             Excel._Worksheet ws = (Excel._Worksheet) wb.ActiveSheet;
-            var obj = (string)(ws.Cells[1, 1] as Excel.Range).Value;
-            wb.Close();
-            wb = excelApp.Workbooks.Add();
-            Excel._Worksheet workSheet = (Excel.Worksheet) wb.ActiveSheet;
-            workSheet.Cells[1, "A"] = obj;
-            
-            wb.SaveAs("TEST2");
+            Excel.Range usedRange = ws.UsedRange;
+            Console.Write($"Rows : {usedRange.Rows.Count} | Columns : {usedRange.Columns.Count}");
+            // int currentCol = 1;
+            // var val = (string) ((Excel.Range) cols[1, currentCol]).Value;
+            //
+            // while (val != null) {
+            //     Console.Write(val);
+            //     
+            //     val = (string) ((Excel.Range) cols[1, ++currentCol]).Value;
+            // }
+
+
             wb.Close();
             excelApp.Quit();
             
         }
-        
+
+        [Test]
+        public void ReadWorkbookTest() {
+            ExcelMerger em = new ExcelMerger();
+            em._readWorkbook(@"C:\Users\Basestar\Documents\TEST.xlsx");
+            em.Quit();
+        }
+
     }
 }

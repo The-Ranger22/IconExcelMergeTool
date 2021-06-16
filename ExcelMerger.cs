@@ -34,8 +34,8 @@ namespace ExcelMerge {
             
             
             var enumerator = _files.GetEnumerator();
-            var tempWorkbook = _app.Workbooks.Open(enumerator.Current, ReadOnly: true);
-            var tempWorksheet = (Excel._Worksheet) tempWorkbook.ActiveSheet;
+
+            
             
 
             /* Read the first row headers of the first file */
@@ -43,9 +43,21 @@ namespace ExcelMerge {
             /* Match the contents of all subsequent files to the headers pulled from the first file */
         }
 
-        private string _itemSelect(int row, int column) {
-            
-            return null;
+        public void _readWorkbook(string filename, bool firstWorkbook = false) {
+            int row = (firstWorkbook) ? 1 : 2;
+            int col = 1;
+
+            Excel._Workbook tempWorkbook = _app.Workbooks.Open(filename, ReadOnly: true);
+            Excel._Worksheet tempWorksheet = (Excel._Worksheet) tempWorkbook.ActiveSheet;
+            Excel.Range usedRange = tempWorksheet.UsedRange;
+
+            for (int i = row; i <= usedRange.Rows.Count; i++) {
+                for (int j = col; j <= usedRange.Columns.Count; j++) {
+                    Console.Write(((Excel.Range)usedRange.Item[i, j]).Value.ToString());
+                }
+                Console.WriteLine();
+            }
+            tempWorkbook.Close();
         }
 
         public void Export() {
@@ -60,6 +72,11 @@ namespace ExcelMerge {
 
         public void Quit() {
             _app.Quit();
+        }
+
+        public static DataTable WorksheetToDataTable(string filename) {
+            
+            return null;
         }
 
         private void _readFirstRow() { }
