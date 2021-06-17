@@ -81,7 +81,7 @@ namespace EMTest {
         public void Merge() {
             ExcelMerger em = new ExcelMerger();
             em.Filename = "TEST5";
-            em.AddWorkbooks(new []{"C:\\Users\\Basestar\\Documents\\TEST.xlsx", "C:\\Users\\Basestar\\Documents\\TEST3.xlsx"});
+            em.AddWorkbooks(new []{@"C:\Users\Basestar\Documents\TEST.xlsx", @"C:\Users\Basestar\Documents\TEST6.xlsx"});
             em.Merge();
             em.Export();
             em.Quit();
@@ -109,9 +109,9 @@ namespace EMTest {
             //         Console.WriteLine();
             //     }
             // }
-            foreach (var lis in em.NewWorksheet.Values) {
-                foreach (var obj in lis.Values) {
-                    Console.Write($"| {obj}");
+            foreach (var lis in em.NewWorksheet) {
+                foreach (var obj in lis) {
+                    Console.Write($"| {obj} ");
                 }
                 Console.WriteLine();
             }
@@ -123,21 +123,58 @@ namespace EMTest {
         [Test]
         public void SlimNewWorkbook() {
             ExcelMerger em = new ExcelMerger();
-            em.Filename = "TEST5";
+            em.Filename = "TEST7";
             em.AddWorkbook(@"C:\Users\Basestar\Documents\TEST6.xlsx");
             em.Merge();
-            
-            
+            em.Slim(0, summableFields: new []{1});
 
-            foreach (var lis in em.NewWorksheet.Values) {
-                foreach (var obj in lis.Values) {
-                    Console.Write($"| {obj}");
+            foreach (var lis in em.NewWorksheet) {
+                foreach (var obj in lis) {
+                    Console.Write($"| {obj} ");
                 }
                 Console.WriteLine();
             }
-
+            em.Export();
             em.Quit();
         }
 
+        [Test]
+        public void FullMergeSlimTest() {
+            ExcelMerger em = new ExcelMerger();
+            em.Filename = "FULL_TEST_1";
+            em.AddWorkbooks(new [] {
+                @"C:\Users\Basestar\Documents\20124B-A505.xls",
+                @"C:\Users\Basestar\Documents\20124B-A503.xls"
+            });
+            em.Merge();
+            em.Slim(3, summableFields:new []{1});
+            foreach (var lis in em.NewWorksheet) {
+                foreach (var obj in lis) {
+                    Console.Write($"| {obj} ");
+                }
+                Console.WriteLine();
+            }
+            em.Export();
+            em.Quit();
+        }
+        [Test]
+        public void FullMergeSlimTest2() {
+            ExcelMerger em = new ExcelMerger();
+            em.Filename = "FULL_TEST_3";
+            em.AddWorkbooks(new [] {
+                @"C:\Users\Basestar\Documents\20124B-A505.xls",
+                @"C:\Users\Basestar\Documents\20124B-A504.xls"
+            });
+            em.Merge();
+            em.Slim(2, 6, new []{1});
+            foreach (var lis in em.NewWorksheet) {
+                foreach (var obj in lis) {
+                    Console.Write($"| {obj} ");
+                }
+                Console.WriteLine();
+            }
+            em.Export();
+            em.Quit();
+        }
     }
 }

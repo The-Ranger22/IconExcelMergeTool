@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices;
@@ -6,15 +7,15 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ExcelMerge {
     public class ExcelMerger {
+        private const int NULL_SECONDARY_KEY = -1;
         public string Filename { get; set; }
-        public SortedDictionary<int, SortedList<int, object>> NewWorksheet { get; set; }
+        public HashSet<ArrayList> NewWorksheet { get; set; }
         private HashSet<string> _files;
         private Excel._Application _app;
         private Excel._Workbook _workbook;
         private Excel._Worksheet _worksheet;
         private int _depth;
         private bool _closed;
-        
 
 
         public ExcelMerger() {
@@ -25,7 +26,7 @@ namespace ExcelMerge {
             _worksheet = (Excel.Worksheet) _workbook.ActiveSheet;
             _depth = 1;
             _closed = false;
-            NewWorksheet = new SortedDictionary<int, SortedList<int, object>>();
+            NewWorksheet = new HashSet<ArrayList>();
         }
 
         public void AddWorkbook(string filename) {
@@ -48,26 +49,45 @@ namespace ExcelMerge {
             while (enumerator.MoveNext()) {
                 _readWorkbook(enumerator.Current);
             }
+
             enumerator.Dispose();
         }
 
-        public void Slim(int primaryKey) {
-            SortedDictionary<int, SortedList<int, object>> slimmedWorksheet =
-                new SortedDictionary<int, SortedList<int, object>>();
-            foreach (var lis in NewWorksheet.Values) {
+        public void Slim(int primaryKey, int secondaryKey = NULL_SECONDARY_KEY, int[] summableFields = null) {
+            HashSet<ArrayList> slimmedWorksheet = new HashSet<ArrayList>();
+            foreach (var lis in NewWorksheet) {
+                bool preexistingKey = false;
                 //if slimmedWorksheet does not already contain a list containing the designated primary key, add the list to slimmedWorksheet
-                if (slimmedWorksheet.ContainsValue(lis)) {
-                    
+                if (!slimmedWorksheet.Contains(lis)) {
+                    foreach (var record in slimmedWorksheet) {
+                        //check if the primary key 
+                        if (!(record[primaryKey] is null) && record[primaryKey].Equals(lis[primaryKey])) {
+                            foreach (var index in summableFields) {
+                                record[index] = (double) (lis[index]) + (double) (record[index]);
+                            }
+
+                            preexistingKey = true;
+                            break;
+                        }
+                        if (record[primaryKey] is null && secondaryKey != NULL_SECONDARY_KEY &&
+                            !(record[secondaryKey] is null) && record[secondaryKey].Equals(lis[secondaryKey])) {
+                            foreach (var index in summableFields) {
+                                record[index] = (double) (lis[index]) + (double) (record[index]);
+                            }
+                            preexistingKey = true;
+                            break;
+                        }
+                    }
+
+                    if (!preexistingKey) {
+                        slimmedWorksheet.Add(lis);
+                    }
                 }
-                //else, update the integer values already stored in the record owned by the primary key
-                
-                foreach (var obj in lis.Values) {
-                    Console.Write($"| {obj} ");
-                }
-                Console.WriteLine();
             }
-            
+
+            NewWorksheet = slimmedWorksheet;
         }
+
 
         /// <summary>
         /// Reads the first worksheet from an excel workbook into a new workbook.
@@ -81,18 +101,18 @@ namespace ExcelMerge {
                 Excel._Workbook tempWorkbook = _app.Workbooks.Open(filename, ReadOnly: true);
                 Excel._Worksheet tempWorksheet = (Excel._Worksheet) tempWorkbook.ActiveSheet;
                 Excel.Range usedRange = tempWorksheet.UsedRange;
-                Excel.Range newBookRange = _worksheet.Cells;
+                //Excel.Range newBookRange = _worksheet.Cells;
 
                 for (int i = row; i <= usedRange.Rows.Count; i++) {
-                    SortedList<int, object> lis = new SortedList<int, object>();
+                    ArrayList lis = new ArrayList();
                     for (int j = col; j <= usedRange.Columns.Count; j++) {
                         //Console.Write(((Excel.Range) usedRange.Item[i, j]).Value.ToString());
-                        lis.Add(j, ((Excel.Range) usedRange.Item[i, j]).Value);
-                        newBookRange.Item[_depth, j] = ((Excel.Range) usedRange.Item[i, j]).Value;
+                        lis.Add(((Excel.Range) usedRange.Item[i, j]).Value);
+                        //newBookRange.Item[_depth, j] = ((Excel.Range) usedRange.Item[i, j]).Value;
                     }
-                    NewWorksheet.Add(_depth, lis);
+
+                    NewWorksheet.Add(lis);
                     _depth++;
-                    Console.WriteLine();
                 }
 
                 tempWorkbook.Close();
@@ -103,6 +123,20 @@ namespace ExcelMerge {
         }
 
         public void Export() {
+            int rowCounter = 1;
+            foreach (var lis in NewWorksheet) {
+                int colCounter = 1;
+                foreach (var obj in lis) {
+                    _worksheet.Cells.Item[rowCounter, colCounter] = obj;
+                    _worksheet.Cells.ColumnWidth = 20;
+                    colCounter++;
+                }
+
+                rowCounter++;
+                Console.WriteLine();
+            }
+
+
             _workbook.SaveAs(Filename);
             _workbook.Close();
             _closed = true;
@@ -122,18 +156,8 @@ namespace ExcelMerge {
             if (!_closed) {
                 _workbook.Close(false);
             }
+
             _app.Quit();
         }
-
-        public static DataTable WorksheetToDataTable(string filename) {
-            return null;
-        }
-
-        private void _readFirstRow() { }
-        
-        
-        
-        
-        
     }
 }
