@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ExcelMerge;
 using NUnit.Framework;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -60,7 +61,81 @@ namespace EMTest {
         [Test]
         public void ReadWorkbookTest() {
             ExcelMerger em = new ExcelMerger();
+            em.Filename = "TEST3";
+            em._readWorkbook(@"C:\Users\Basestar\Documents\TEST.xlsx", true);
+            em.Export();
+            em.Quit();
+        }
+
+        [Test]
+        public void ReadWorkbookMultiBook() {
+            ExcelMerger em = new ExcelMerger();
+            em.Filename = "TEST4";
+            em._readWorkbook(@"C:\Users\Basestar\Documents\TEST.xlsx", true);
             em._readWorkbook(@"C:\Users\Basestar\Documents\TEST.xlsx");
+            em.Export();
+            em.Quit();
+        }
+
+        [Test]
+        public void Merge() {
+            ExcelMerger em = new ExcelMerger();
+            em.Filename = "TEST5";
+            em.AddWorkbooks(new []{"C:\\Users\\Basestar\\Documents\\TEST.xlsx", "C:\\Users\\Basestar\\Documents\\TEST3.xlsx"});
+            em.Merge();
+            em.Export();
+            em.Quit();
+        }
+
+        [Test]
+        public void PrintNewWorkbook() {
+            ExcelMerger em = new ExcelMerger();
+            em.Filename = "TEST5";
+            em.AddWorkbook(@"C:\Users\Basestar\Documents\TEST6.xlsx");
+            em.Merge();
+
+
+            // for (int i = 0; i < em.NewWorksheet.Count; i++) {
+            //     SortedList<int, object> val = null;
+            //     
+            //     if (em.NewWorksheet.TryGetValue(i, out val)) {
+            //         for (int j = 0; j < val.Count; j++) {
+            //             object output = null;
+            //             if (val.TryGetValue(j, out output)) {
+            //                 Console.Write($"| {output}");
+            //             }
+            //             
+            //         }
+            //         Console.WriteLine();
+            //     }
+            // }
+            foreach (var lis in em.NewWorksheet.Values) {
+                foreach (var obj in lis.Values) {
+                    Console.Write($"| {obj}");
+                }
+                Console.WriteLine();
+            }
+
+            em.Quit();
+            
+        }
+
+        [Test]
+        public void SlimNewWorkbook() {
+            ExcelMerger em = new ExcelMerger();
+            em.Filename = "TEST5";
+            em.AddWorkbook(@"C:\Users\Basestar\Documents\TEST6.xlsx");
+            em.Merge();
+            
+            
+
+            foreach (var lis in em.NewWorksheet.Values) {
+                foreach (var obj in lis.Values) {
+                    Console.Write($"| {obj}");
+                }
+                Console.WriteLine();
+            }
+
             em.Quit();
         }
 
