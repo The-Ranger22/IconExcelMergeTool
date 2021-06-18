@@ -7,14 +7,15 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ExcelMerge {
     public class ExcelMerger {
-        private const int NULL_SECONDARY_KEY = -1;
+        public const int NULL_KEY = -1;
+        private const string NO_KEY_SELECTED = "No Key Selected";
         public string Filename { get; set; }
         public HashSet<ArrayList> NewWorksheet { get; set; }
+        public ArrayList Header { get; set; }
         private HashSet<string> _files;
         private Excel._Application _app;
         private Excel._Workbook _workbook;
         private Excel._Worksheet _worksheet;
-        private int _depth;
         private bool _closed;
 
 
@@ -24,7 +25,6 @@ namespace ExcelMerge {
             _app = new Excel.Application();
             _workbook = _app.Workbooks.Add();
             _worksheet = (Excel.Worksheet) _workbook.ActiveSheet;
-            _depth = 1;
             _closed = false;
             NewWorksheet = new HashSet<ArrayList>();
         }
@@ -49,11 +49,11 @@ namespace ExcelMerge {
             while (enumerator.MoveNext()) {
                 _readWorkbook(enumerator.Current);
             }
-
+            
             enumerator.Dispose();
         }
 
-        public void Slim(int primaryKey, int secondaryKey = NULL_SECONDARY_KEY, int[] summableFields = null) {
+        public void Slim(int primaryKey, int secondaryKey = NULL_KEY, int[] summableFields = null) {
             HashSet<ArrayList> slimmedWorksheet = new HashSet<ArrayList>();
             foreach (var lis in NewWorksheet) {
                 bool preexistingKey = false;
@@ -69,7 +69,7 @@ namespace ExcelMerge {
                             preexistingKey = true;
                             break;
                         }
-                        if (record[primaryKey] is null && secondaryKey != NULL_SECONDARY_KEY &&
+                        if (record[primaryKey] is null && secondaryKey != NULL_KEY &&
                             !(record[secondaryKey] is null) && record[secondaryKey].Equals(lis[secondaryKey])) {
                             foreach (var index in summableFields) {
                                 record[index] = (double) (lis[index]) + (double) (record[index]);
@@ -97,6 +97,7 @@ namespace ExcelMerge {
         public void _readWorkbook(string filename, bool firstWorkbook = false) {
             int row = (firstWorkbook) ? 1 : 2; // The starting row
             int col = 1; // The starting column
+            
             try {
                 Excel._Workbook tempWorkbook = _app.Workbooks.Open(filename, ReadOnly: true);
                 Excel._Worksheet tempWorksheet = (Excel._Worksheet) tempWorkbook.ActiveSheet;
@@ -111,8 +112,10 @@ namespace ExcelMerge {
                         //newBookRange.Item[_depth, j] = ((Excel.Range) usedRange.Item[i, j]).Value;
                     }
 
+                    if (i == 1) {
+                        Header = lis;
+                    }
                     NewWorksheet.Add(lis);
-                    _depth++;
                 }
 
                 tempWorkbook.Close();

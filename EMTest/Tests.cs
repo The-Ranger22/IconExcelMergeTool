@@ -7,8 +7,6 @@ using Excel = Microsoft.Office.Interop.Excel;
 namespace EMTest {
     [TestFixture]
     public class Tests {
-        ExcelMerger _em = new ExcelMerger();
-
         [Test]
         public void Test1() {
             var excelApp = new Excel.Application();

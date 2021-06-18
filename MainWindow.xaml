@@ -11,14 +11,31 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="36"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="36"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="90"></ColumnDefinition>
-            <ColumnDefinition Width="90"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="20"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Button Name="SelectFilesBtn" Click="_selectFiles" Grid.Column="0" Grid.Row="0">Select Files</Button>
-        <Button Name="MergeFilesBtn" Click="_mergeFiles" Grid.Column="1" Grid.Row="0">Merge Files</Button>
-        <TextBlock Name="TBlock" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" TextWrapping="Wrap"></TextBlock>
+        <Button Name="SelectFilesBtn" Click="_selectFiles" Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="0">Select Files</Button>
+        <Button Name="MergeFilesBtn" Click="_mergeFiles" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="5">Merge Files</Button>
+        <ListView Name="SelectedFiles"  Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="5" Margin="0, 10"></ListView>
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+            <TextBlock>Primary Key</TextBlock>
+            <ComboBox Name="PrimaryKeyComBox" ></ComboBox>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2">
+            <TextBlock>Secondary Key</TextBlock>
+            <ComboBox Name="SecondaryKeyComBox"></ComboBox>
+        </StackPanel>
+        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5">Summation Fields</TextBlock>
+        <ListView Name="SumFields" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Stretch" SelectionMode="Multiple" Margin="0, 10"/>
+        <CheckBox Name="CBox" Content="Slim Results" Foreground="Black"  FontSize="14" Grid.Row="5" Grid.Column="4"></CheckBox>
     </Grid>
 </Window>
