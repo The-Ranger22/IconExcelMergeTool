@@ -87,8 +87,7 @@ namespace ExcelMerge {
 
             NewWorksheet = slimmedWorksheet;
         }
-
-
+        
         /// <summary>
         /// Reads the first worksheet from an excel workbook into a new workbook.
         /// </summary>
@@ -153,7 +152,6 @@ namespace ExcelMerge {
             Filename = filename;
             Export();
         }
-
 
         public void Quit() {
             if (!_closed) {

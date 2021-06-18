@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ExcelMerge"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="IEM" Height="350" Width="525"
         Closed="MainWindow_OnClosed">
     <Grid Name="LGrid" Margin="10, 10, 10, 10">
         <Grid.RowDefinitions>

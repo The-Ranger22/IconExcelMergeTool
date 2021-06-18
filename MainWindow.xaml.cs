@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Windows;
-using System.Windows.Media;
+using System.Windows.Input;
 using Microsoft.Win32;
 
 namespace ExcelMerge {
@@ -22,11 +22,11 @@ namespace ExcelMerge {
             ofd.Multiselect = true;
             ofd.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
             if (ofd.ShowDialog() == true) {
+                Mouse.OverrideCursor = Cursors.Wait;
                 //SelectedFiles.Height = LGrid.RowDefinitions[1].ActualHeight;
                 foreach (string fname in ofd.FileNames) {
                     em.AddWorkbook(fname);
                 }
-
                 SelectedFiles.ItemsSource = ofd.FileNames;
                 em.Merge();
                 ArrayList keyFields = (ArrayList) em.Header.Clone();
@@ -36,16 +36,19 @@ namespace ExcelMerge {
                 SecondaryKeyComBox.ItemsSource = keyFields;
                 SecondaryKeyComBox.SelectedItem = NO_KEY_SELECTED;
                 SumFields.ItemsSource = em.Header;
+                Mouse.OverrideCursor = Cursors.Arrow;
             }
         }
 
-        void _mergeFiles(object sender, RoutedEventArgs e) {
+        private void _mergeFiles(object sender, RoutedEventArgs e) {
             SaveFileDialog sfd = new SaveFileDialog(); //declare and init save file dialog for use.
-            sfd.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+            sfd.Filter = "Excel Files|*.xlsx";
 
             if (sfd.ShowDialog() == true) {
                 em.Filename = sfd.FileName;
+                
                 try {
+                    Mouse.OverrideCursor = Cursors.Wait;
                     if (!(CBox.IsChecked is null) && (bool) CBox.IsChecked && SumFields.SelectedItems.Count > 0) {
                         int[] selectedFieldIndices = new int[SumFields.SelectedItems.Count];
                         int primaryKey = (!PrimaryKeyComBox.SelectionBoxItem.Equals(NO_KEY_SELECTED))
@@ -63,6 +66,9 @@ namespace ExcelMerge {
 
 
                     em.Export();
+                    Mouse.OverrideCursor = Cursors.Arrow;
+                    MessageBox.Show("Merge complete!");
+                    
                 }
                 catch (Exception exception) {
                     Console.WriteLine(exception);
@@ -71,7 +77,7 @@ namespace ExcelMerge {
             }
         }
 
-        private void DisplaySelectedFiles() { }
+        
 
 
         private void MainWindow_OnClosed(object sender, EventArgs e) {
