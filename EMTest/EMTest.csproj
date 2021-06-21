@@ -50,6 +50,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ExcelMergerTest.cs" />
         <Compile Include="Tests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
@@ -61,6 +62,13 @@
         <Project>{8920b86f-38b1-4b68-907a-8fecbf2bda71}</Project>
         <Name>ExcelMerge</Name>
       </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="TestResources\TR_RESULT" />
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="TestResources\TR_SOURCE\TR_1.xlsx" />
+      <Content Include="TestResources\TR_SOURCE\TR_2.xlsx" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

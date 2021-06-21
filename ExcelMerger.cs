@@ -6,31 +6,37 @@ using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ExcelMerge {
+    /// <summary>
+    /// ExcelMerger is a lightweight class designed to manipulate excel spreadsheets, primarily merging them.
+    /// </summary>
+    /// <remarks>
+    /// For the sake of expediency, the ExcelMerger class relies as little as possible on excel when manipulating data, only interacting with it during file read/write.
+    /// </remarks>
     public class ExcelMerger {
         public const int NULL_KEY = -1;
-        private const string NO_KEY_SELECTED = "No Key Selected";
         public string Filename { get; set; }
         public HashSet<ArrayList> NewWorksheet { get; set; }
         public ArrayList Header { get; set; }
-        private HashSet<string> _files;
+        public HashSet<string> Files { get; }
         private Excel._Application _app;
         private Excel._Workbook _workbook;
         private Excel._Worksheet _worksheet;
         private bool _closed;
-
+        public ArrayList Ignorables { get; private set; }
 
         public ExcelMerger() {
             Filename = $"untitled - {DateTime.Today}";
-            _files = new HashSet<string>();
+            Files = new HashSet<string>();
             _app = new Excel.Application();
             _workbook = _app.Workbooks.Add();
             _worksheet = (Excel.Worksheet) _workbook.ActiveSheet;
             _closed = false;
             NewWorksheet = new HashSet<ArrayList>();
+            Ignorables = new ArrayList();
         }
 
         public void AddWorkbook(string filename) {
-            _files.Add(filename);
+            Files.Add(filename);
         }
 
         public void AddWorkbooks(string[] filenames) {
@@ -40,7 +46,7 @@ namespace ExcelMerge {
         }
 
         public void Merge() {
-            var enumerator = _files.GetEnumerator();
+            var enumerator = Files.GetEnumerator();
 
             /* Read the first row headers of the first file */
             enumerator.MoveNext(); // Move to point at the first item in the hash set.
@@ -61,7 +67,7 @@ namespace ExcelMerge {
                 if (!slimmedWorksheet.Contains(lis)) {
                     foreach (var record in slimmedWorksheet) {
                         //check if the primary key 
-                        if (!(record[primaryKey] is null) && record[primaryKey].Equals(lis[primaryKey])) {
+                        if (!(record[primaryKey] is null) && !Ignorables.Contains(record[primaryKey].ToString()) && record[primaryKey].Equals(lis[primaryKey])) {
                             foreach (var index in summableFields) {
                                 record[index] = (double) (lis[index]) + (double) (record[index]);
                             }
@@ -69,8 +75,21 @@ namespace ExcelMerge {
                             preexistingKey = true;
                             break;
                         }
-                        if (record[primaryKey] is null && secondaryKey != NULL_KEY &&
-                            !(record[secondaryKey] is null) && record[secondaryKey].Equals(lis[secondaryKey])) {
+                        /*
+                         * If the record at the given primary key is null AND
+                         * the secondary key is not null AND
+                         * the record at the given secondary key is not null AND
+                         * the value at the record at the given secondary key is not an ignorable AND
+                         * the values given by the secondary key in both the record and the list are equal,
+                         * sum
+                         */
+                        if (
+                            (record[primaryKey] is null ||  Ignorables.Contains(record[primaryKey].ToString())) && 
+                            secondaryKey != NULL_KEY &&
+                            !(record[secondaryKey] is null) && 
+                            !Ignorables.Contains(record[secondaryKey].ToString()) &&
+                            record[secondaryKey].Equals(lis[secondaryKey])
+                            ) {
                             foreach (var index in summableFields) {
                                 record[index] = (double) (lis[index]) + (double) (record[index]);
                             }
@@ -116,12 +135,16 @@ namespace ExcelMerge {
                     }
                     NewWorksheet.Add(lis);
                 }
-
+                
                 tempWorkbook.Close();
             }
             catch (COMException e) {
                 Console.Write($"Could not find file! {e}");
             }
+        }
+
+        public void ParseIgnorables(string str, char delimiter) {
+            Ignorables.AddRange(str.Split(delimiter));
         }
 
         public void Export() {
@@ -133,12 +156,9 @@ namespace ExcelMerge {
                     _worksheet.Cells.ColumnWidth = 20;
                     colCounter++;
                 }
-
                 rowCounter++;
-                Console.WriteLine();
             }
-
-
+            
             _workbook.SaveAs(Filename);
             _workbook.Close();
             _closed = true;
@@ -157,8 +177,8 @@ namespace ExcelMerge {
             if (!_closed) {
                 _workbook.Close(false);
             }
-
             _app.Quit();
+            
         }
     }
 }

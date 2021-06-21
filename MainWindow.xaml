@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:ExcelMerge"
         mc:Ignorable="d"
         Title="IEM" Height="350" Width="525"
-        Closed="MainWindow_OnClosed">
-    <Grid Name="LGrid" Margin="10, 10, 10, 10">
+        Closed="MainWindow_OnClosed"
+        Background="LightSkyBlue">
+    <Grid Name="LGrid" Margin="10, 10, 10, 10" >
         <Grid.RowDefinitions>
             <RowDefinition Height="36"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -25,6 +26,7 @@
         </Grid.ColumnDefinitions>
         <Button Name="SelectFilesBtn" Click="_selectFiles" Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="0">Select Files</Button>
         <Button Name="MergeFilesBtn" Click="_mergeFiles" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="5">Merge Files</Button>
+        
         <ListView Name="SelectedFiles"  Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="5" Margin="0, 10"></ListView>
         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
             <TextBlock>Primary Key</TextBlock>
@@ -34,8 +36,10 @@
             <TextBlock>Secondary Key</TextBlock>
             <ComboBox Name="SecondaryKeyComBox"></ComboBox>
         </StackPanel>
-        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="5">Summation Fields</TextBlock>
-        <ListView Name="SumFields" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="5" VerticalAlignment="Stretch" SelectionMode="Multiple" Margin="0, 10"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">Summation Fields</TextBlock>
+        <ListView Name="SumFields" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" SelectionMode="Multiple" Margin="0, 10"/>
+        <TextBlock Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2">Ignorable Key Values</TextBlock>
+        <TextBox Name="IgnorableKeyValues" ToolTip="Separate Values via semicolon" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" FontSize="14" Margin="0, 10"></TextBox>
         <CheckBox Name="CBox" Content="Slim Results" Foreground="Black"  FontSize="14" Grid.Row="5" Grid.Column="4"></CheckBox>
     </Grid>
 </Window>
