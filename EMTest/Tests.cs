@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ExcelMerge;
 using NUnit.Framework;
 using Excel = Microsoft.Office.Interop.Excel;

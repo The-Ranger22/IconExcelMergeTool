@@ -7,7 +7,9 @@
         mc:Ignorable="d"
         Title="IEM" Height="350" Width="525"
         Closed="MainWindow_OnClosed"
-        Background="LightSkyBlue">
+        Background="Lavender"
+        BorderBrush="Black"
+        BorderThickness="1">
     <Grid Name="LGrid" Margin="10, 10, 10, 10" >
         <Grid.RowDefinitions>
             <RowDefinition Height="36"></RowDefinition>
@@ -24,22 +26,21 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Button Name="SelectFilesBtn" Click="_selectFiles" Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="0">Select Files</Button>
-        <Button Name="MergeFilesBtn" Click="_mergeFiles" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="5">Merge Files</Button>
-        
-        <ListView Name="SelectedFiles"  Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="5" Margin="0, 10"></ListView>
+        <Button Name="SelectFilesBtn" BorderBrush="Black" BorderThickness="1" Click="_selectFiles" Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="0">Select Files</Button>
+        <Button Name="MergeFilesBtn" BorderBrush="Black" BorderThickness="1" Click="_mergeFiles" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="5">Merge Files</Button>
+        <ListView Name="SelectedFiles" BorderBrush="Black" BorderThickness="1"  Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="5" Margin="0, 10"></ListView>
         <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
             <TextBlock>Primary Key</TextBlock>
-            <ComboBox Name="PrimaryKeyComBox" ></ComboBox>
+            <ComboBox BorderBrush="Black" BorderThickness="1" Name="PrimaryKeyComBox" ></ComboBox>
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2">
             <TextBlock>Secondary Key</TextBlock>
-            <ComboBox Name="SecondaryKeyComBox"></ComboBox>
+            <ComboBox Name="SecondaryKeyComBox" BorderBrush="Black" BorderThickness="1"></ComboBox>
         </StackPanel>
         <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">Summation Fields</TextBlock>
-        <ListView Name="SumFields" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" SelectionMode="Multiple" Margin="0, 10"/>
-        <TextBlock Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2">Ignorable Key Values</TextBlock>
-        <TextBox Name="IgnorableKeyValues" ToolTip="Separate Values via semicolon" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" FontSize="14" Margin="0, 10"></TextBox>
-        <CheckBox Name="CBox" Content="Slim Results" Foreground="Black"  FontSize="14" Grid.Row="5" Grid.Column="4"></CheckBox>
+        <ListView Name="SumFields" BorderBrush="Black" BorderThickness="1" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" SelectionMode="Multiple" Margin="0, 10"/>
+        <TextBlock Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2">Ignorable Key Values (Separate by semicolon)</TextBlock>
+        <TextBox Name="IgnorableKeyValues" BorderBrush="Black" BorderThickness="1" Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" FontSize="14" Margin="0, 10"></TextBox>
+        <CheckBox Name="CBox" Content="Slim Results" Foreground="Black" Background="White" BorderBrush="Black" BorderThickness="1"  FontSize="14" Grid.Row="5" Grid.Column="4"></CheckBox>
     </Grid>
 </Window>

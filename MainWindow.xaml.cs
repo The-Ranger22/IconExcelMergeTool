@@ -9,11 +9,24 @@ namespace ExcelMerge {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow {
+        #region Private Fields
+        /// <summary>
+        /// The default string constant that is displayed when no keys have been selected by the user.
+        /// </summary>
         private const string NO_KEY_SELECTED = "No Key Selected";
-        private ExcelMerger _em;
-        private bool _filesAreSelected = false;
+        /// <summary>
+        /// Used to delimit the string given by the ignorable key field in the view
+        /// </summary>
         private const char DELIMITER = ';';
-
+        /// <summary>
+        /// Used to manipulate excel files.
+        /// </summary>
+        private ExcelMerger _em;
+        /// <summary>
+        /// Used to prevent any merge attempt before files have been selected.
+        /// </summary>
+        private bool _filesAreSelected = false;
+        #endregion
         public MainWindow() {
             InitializeComponent();
             _em = new ExcelMerger();
@@ -47,8 +60,22 @@ namespace ExcelMerge {
             }
         }
         /// <summary>
-        /// Merges the selected file together.
+        /// Merges the selected files together based on arguments provided by the user through the view.
         /// </summary>
+        /// <remarks>
+        /// The arguments the user can provide via the UI are thusly:
+        ///     Primary Key:
+        ///         The primary key is the first field that is matched against during the slim operation.
+        ///     Secondary Key:
+        ///         The secondary key is a redundancy that is matched against if, and only if, the primary key produces
+        ///         a null or ignorable result.
+        ///     Summation Fields:
+        ///         The fields to be summed during the slim operation.
+        ///     Ignorable Key Values:
+        ///         A string containing characters/phrases/words that are deemed ignorable that are separated by semicolon.
+        ///     Slim Results:
+        ///         Enables the slim operation during the merge process.
+        /// </remarks>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void _mergeFiles(object sender, RoutedEventArgs e) {
@@ -101,6 +128,10 @@ namespace ExcelMerge {
         /// <summary>
         /// Resets both the view elements and the ExcelMerger object to their default states.
         /// </summary>
+        /// <remarks>
+        /// While the method will reset all other control elements in the view, it will leave IgnorableKeyValues alone
+        /// so that the user need not reenter the same set of ignorables over and over again.
+        /// </remarks>
         private void _resetView() {
             _em.Quit();
             _em = new ExcelMerger();
